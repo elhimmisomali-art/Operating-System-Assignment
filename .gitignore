@@ -1,0 +1,8 @@
+*.o
+*.out
+*.exe
+*.pyc
+__pycache__/
+venv/
+.DS_Store
+pcb_snapshot.json
