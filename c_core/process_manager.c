@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #include <time.h>
 #include <sys/types.h>
 
@@ -30,23 +29,23 @@ static PCB* find_process(pid_t pid) {
     return NULL;
 }
 
+/* ---------------- FORK ---------------- */
 pid_t edu_fork(PCB *parent) {
 
     PCB child = *parent;
 
     child.pid = pid_counter++;
-    child.state = NEW;
+    child.state = READY;
     child.creation_time = time(NULL);
     child.remaining_time = child.burst_time;
 
     process_table[process_count++] = child;
 
-    process_table[process_count - 1].state = READY;
-
     log_event("Fork created new process", child.pid);
 
     return child.pid;
 }
+
 
 void edu_exec(pid_t pid, char *prog_name) {
 
@@ -57,12 +56,26 @@ void edu_exec(pid_t pid, char *prog_name) {
     strncpy(proc->name, prog_name, sizeof(proc->name) - 1);
     proc->name[sizeof(proc->name) - 1] = '\0';
 
-    proc->remaining_time = proc->burst_time;
+    proc->state = RUNNING;
 
-    proc->state = READY;
-
-    log_event("Exec completed", pid);
+    log_event("Exec loaded program", pid);
 }
+
+
+void edu_wait(pid_t pid) {
+
+    PCB *proc = find_process(pid);
+
+    if (!proc) return;
+
+    log_event("Process waiting (simulated)", pid);
+
+    proc->state = WAITING;
+
+   
+    for (volatile int i = 0; i < 100000000; i++);
+}
+
 
 void edu_exit(pid_t pid, int exit_code) {
 
@@ -78,31 +91,6 @@ void edu_exit(pid_t pid, int exit_code) {
     printf("PID %d exited with code %d\n", pid, exit_code);
 }
 
-void write_json() {
-
-    FILE *f = fopen("pcb_snapshot.json", "w");
-    if (!f) return;
-
-    fprintf(f, "[\n");
-
-    for (int i = 0; i < process_count; i++) {
-
-        PCB p = process_table[i];
-
-        fprintf(f,
-            " {\"pid\": %d, \"burst_time\": %d, \"arrival_time\": %d, \"priority\": %d}%s\n",
-            p.pid,
-            p.burst_time,
-            p.arrival_time,
-            p.priority,
-            (i == process_count - 1) ? "" : ","
-        );
-    }
-
-    fprintf(f, "]\n");
-
-    fclose(f);
-}
 
 int main() {
 
@@ -110,8 +98,11 @@ int main() {
 
     srand(time(NULL));
 
+    process_count = 0;
+    pid_counter = 1;
+
     
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 6; i++) {
 
         PCB p;
 
@@ -119,12 +110,20 @@ int main() {
         strcpy(p.name, "process");
 
         p.state = READY;
-        p.priority = rand() % 5;
+
+        
+        p.priority = rand() % 10;
+
+      
         p.burst_time = (rand() % 10) + 1;
+
         p.remaining_time = p.burst_time;
+
+        
         p.arrival_time = rand() % 5;
 
         p.memory_req_kb = (rand() % 1024) + 100;
+
         p.creation_time = time(NULL);
         p.thread_count = 0;
         p.exit_code = 0;
@@ -134,17 +133,41 @@ int main() {
         log_event("Process created", p.pid);
     }
 
-    
-    edu_fork(&process_table[0]);
+   
 
-    
+    pid_t child = edu_fork(&process_table[0]);
+
     edu_exec(process_table[1].pid, "edu_program");
 
-    
+    edu_wait(process_table[1].pid);
+
     edu_exit(process_table[1].pid, 0);
 
+    
+    FILE *f = fopen("pcb_snapshot.json", "w");
 
-    write_json();
+    if (f != NULL) {
+
+        fprintf(f, "[\n");
+
+        for (int i = 0; i < process_count; i++) {
+
+            PCB p = process_table[i];
+
+            fprintf(f,
+                " {\"pid\": %d, \"burst_time\": %d, \"arrival_time\": %d, \"priority\": %d}%s\n",
+                p.pid,
+                p.burst_time,
+                p.arrival_time,
+                p.priority,
+                (i == process_count - 1) ? "" : ","
+            );
+        }
+
+        fprintf(f, "]\n");
+
+        fclose(f);
+    }
 
     return 0;
 }
