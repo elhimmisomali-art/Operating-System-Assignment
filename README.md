@@ -1,52 +1,201 @@
-# EduOS - Operating System Simulator
+OS Assignment
+Module_Code: 351 CS 2104
 
-Module: 351 CS 2104  
-Student: ELHIM MISOMALI  
-Student ID: 25311351024  
+Student: ELHIM MISOMALI
+Student ID: 25311351024
 
-# Project Description
-EduOS is a simulated operating system that demonstrates core OS concepts such as process management, scheduling, threading, and inter-process communication using C and Python.
+# Project Overview
 
-## Folder Structure
+EduOS is a simplified operating system simulator built using C and Python.
+It demonstrates core operating system concepts such as:
 
-- c_core → C-based OS simulation (process manager, threading, IPC)
-- python_scheduler → CPU scheduling algorithms
-- controller → integration bridge between C and Python
-- docs → reports and screenshots
+# Process management
+CPU scheduling algorithms
+Threading and synchronization
+Inter-process communication (IPC)
 
-## Process Management
+The project is designed to show how an operating system manages processes internally.
 
-Implemented process control using:
-- edu_fork() → creates new process
-- edu_exec() → replaces process program
-- edu_exit() → terminates process
-- edu_wait() → synchronizes parent process
+EduOS implements a simplified process lifecycle using a PCB (Process Control Block).
 
-## Threading
+Implemented System Calls:
+edu_fork() → creates a new process from a parent
+edu_exec() → loads a new program into a process
+edu_wait() → simulates process synchronization
+edu_exit() → terminates a process
+PCB Contains:
+Process ID (PID)
+State (READY, RUNNING, WAITING, TERMINATED)
+Burst Time
+Priority
+Arrival Time
+Memory Requirements
 
-Implemented a thread pool using pthreads with:
-- mutex locks
-- condition variables
-- task queue system
+# program structure
 
-## Race Condition
+EduOS/
+│
+├── c_core/              # C-based OS simulation (core engine)
+│   ├── process_manager.c
+│   ├── thread_manager.c
+│   ├── race_demo.c
+│   ├── race_fixed.c
+│   ├── ipc_shared.c
+│   └── include/eduos.h
+│
+├── python_scheduler/    # CPU scheduling simulation
+│   └── scheduler_sim.py
+│
+├── controller/          # Integration layer (C ↔ Python)
+│
+├── docs/                # Reports and screenshots
+│
+└── README.md
 
-Demonstrated race condition using multiple threads updating a shared counter without synchronization, then fixed using mutex locks.
+# Threading system
 
-## IPC (Interprocess Communication)
+EduOS includes a thread pool system implemented using pthreads.
 
-Implemented:
-- Shared memory simulation for process data exchange
-- Pipe communication between parent and child processes
+Features:
+Thread pool with task queue
+Mutex locks for synchronization
+Condition variables for thread coordination
 
-## CPU Scheduling Results
+This demonstrates concurrent execution and resource sharing
 
-The system successfully demonstrates two scheduling algorithms:
+The system demonstrates:
 
-### FCFS
-Processes are executed in the order they arrive in the ready queue.
+1. Race Condition (Uncontrolled Access)
 
-### SJF
-Processes are sorted based on burst time, resulting in shorter jobs being executed first.
+Multiple threads updating a shared variable without synchronization.
 
-The results clearly show different execution orders and completion times, confirming correct implementation of scheduling logic.
+2. Fixed Version
+
+Race condition is resolved using:
+
+Mutex locks
+Controlled critical section access
+
+This shows the importance of synchronization in concurrent systems.
+
+# Interprocess Communication (IPC)
+
+EduOS implements IPC using:
+
+Shared memory simulation
+Pipe-based communication between processes
+
+This allows data exchange between the C core and Python scheduler.
+
+# CPU Scheduling Algorithms
+
+EduOS supports multiple scheduling strategies:
+
+# FCFS (First Come First Serve)
+Non-preemptive scheduling
+Executes processes in order of arrival
+
+ Simple and fair
+Can cause long waiting times
+
+# SJF (Shortest Job First)
+Executes processes with shortest burst time first
+Improves average waiting time
+
+ Efficient for short tasks
+ May cause starvation
+
+ Priority Scheduling
+Processes selected based on priority (0–9)
+Lower value = higher priority
+
+ Flexible prioritization
+ May cause starvation without aging
+
+# Round Robin (Preemptive)
+Each process gets a fixed time quantum
+If not finished, it is moved to the back of the queue
+
+ Fair CPU sharing
+ Prevents starvation
+ Depends on quantum size
+
+# Scheduling Output Summary
+
+The system generates different execution orders for each algorithm, clearly showing how CPU scheduling affects process execution.
+
+Example outputs demonstrate:
+
+Different start/end times
+Different execution order
+Fairness vs efficiency trade-offs
+# System Integration
+
+# EduOS integrates:
+
+C-based process manager (core system)
+Python scheduler (algorithm simulation)
+JSON-based IPC communication
+
+This forms a complete end-to-end OS simulation pipeline.
+
+Scheduling Visualisation & Comparison
+
+The system generates visual and statistical comparisons for all implemented CPU scheduling algorithms.
+
+# Visual Outputs
+FCFS, SJF, Priority, and Round Robin Gantt charts are generated using matplotlib.
+Each process is assigned a unique color for clarity.
+Idle CPU time is displayed in grey blocks.
+All charts are saved in:
+docs/screenshots/
+Comparison Charts
+
+The simulator automatically generates comparison graphs for:
+
+Average Waiting Time (AWT)
+Average Turnaround Time (TAT)
+CPU Utilisation
+
+These charts allow direct evaluation of algorithm efficiency.
+
+Performance Table
+
+A formatted comparison table is printed in the terminal showing:
+
+Average Waiting Time
+Average Turnaround Time
+Average Response Time
+CPU Utilisation
+Throughput
+
+This enables side-by-side analysis of all scheduling algorithms in a single view.
+
+# Key Features
+
+✔ Process lifecycle simulation
+✔ Multiple CPU scheduling algorithms
+✔ Thread pool implementation
+✔ Race condition demonstration + fix
+✔ IPC via shared memory simulation
+✔ C → Python integration
+
+# pcb_snapshot
+
+pcb_snapshot.json is generated dynamically by the C process manager to simulate kernel-level process state updates.
+
+simulation_report.json is generated by the Python controller after completing scheduling analysis and system integration.
+
+# Conclusion
+
+EduOS successfully demonstrates fundamental operating system concepts including process management, scheduling algorithms, threading, and inter-process communication.
+
+The project highlights the trade-offs between different scheduling strategies and shows how operating systems manage resources efficiently.
+
+# Git Commit (FINAL)
+
+Use this for your final push:
+
+git add .
+git commit -m "Final polished EduOS with full OS simulation and scheduling algorithms"
+git push

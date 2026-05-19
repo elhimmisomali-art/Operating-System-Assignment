@@ -2,17 +2,16 @@
 #include <pthread.h>
 
 #define THREADS 5
-#define INCREMENTS 100000
+#define ITERATIONS 100000
 
 int counter = 0;
 pthread_mutex_t lock;
 
 void* increment(void* arg) {
 
-    for (int i = 0; i < INCREMENTS; i++) {
-
+    for (int i = 0; i < ITERATIONS; i++) {
         pthread_mutex_lock(&lock);
-        counter++;   
+        counter++;
         pthread_mutex_unlock(&lock);
     }
 
@@ -33,9 +32,9 @@ int main() {
         pthread_join(t[i], NULL);
     }
 
-    pthread_mutex_destroy(&lock);
+    printf("Final Counter (SAFE) = %d\n", counter);
 
-    printf("Final counter (SAFE): %d\n", counter);
+    pthread_mutex_destroy(&lock);
 
     return 0;
 }

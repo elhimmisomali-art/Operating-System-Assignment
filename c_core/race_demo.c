@@ -2,14 +2,14 @@
 #include <pthread.h>
 
 #define THREADS 5
-#define INCREMENTS 100000
+#define ITERATIONS 100000
 
 int counter = 0;
 
 void* increment(void* arg) {
 
-    for (int i = 0; i < INCREMENTS; i++) {
-        counter++;   
+    for (int i = 0; i < ITERATIONS; i++) {
+        counter++; // race condition
     }
 
     return NULL;
@@ -27,7 +27,7 @@ int main() {
         pthread_join(t[i], NULL);
     }
 
-    printf("Final counter (UNSAFE): %d\n", counter);
+    printf("Final Counter (UNSAFE) = %d\n", counter);
 
     return 0;
 }

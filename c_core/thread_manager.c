@@ -4,74 +4,91 @@
 #include <unistd.h>
 
 #define THREAD_POOL_SIZE 4
-#define MAX_TASKS 10
+#define TASK_QUEUE_SIZE 10
 
 typedef struct {
     int task_id;
-    int data;
+    int workload;
 } Task;
 
-Task task_queue[MAX_TASKS];
+Task task_queue[TASK_QUEUE_SIZE];
 int task_count = 0;
+int front = 0;
 
-pthread_mutex_t lock;
-pthread_cond_t cond;
+pthread_mutex_t queue_mutex;
+pthread_cond_t queue_cond;
+
+int shutdown_flag = 0;
 
 void* worker(void* arg) {
 
-    int thread_id = *(int*)arg;
+    long id = (long)arg;
 
     while (1) {
 
-        pthread_mutex_lock(&lock);
+        pthread_mutex_lock(&queue_mutex);
 
-        while (task_count == 0) {
-            pthread_cond_wait(&cond, &lock);
+        while (task_count == 0 && !shutdown_flag) {
+            pthread_cond_wait(&queue_cond, &queue_mutex);
         }
 
-        Task task = task_queue[--task_count];
+        if (shutdown_flag && task_count == 0) {
+            pthread_mutex_unlock(&queue_mutex);
+            break;
+        }
 
-        pthread_mutex_unlock(&lock);
+        Task task = task_queue[front++];
+        task_count--;
 
-        printf("Thread %d processing task %d with data %d\n",
-               thread_id, task.task_id, task.data);
+        pthread_mutex_unlock(&queue_mutex);
 
-        sleep(1);
+        printf("Thread %ld processing Task %d\n", id, task.task_id);
+        sleep(task.workload);
     }
 
+    printf("Thread %ld exiting\n", id);
     return NULL;
+}
+
+void add_task(int id, int workload) {
+
+    pthread_mutex_lock(&queue_mutex);
+
+    task_queue[task_count].task_id = id;
+    task_queue[task_count].workload = workload;
+    task_count++;
+
+    pthread_cond_signal(&queue_cond);
+    pthread_mutex_unlock(&queue_mutex);
 }
 
 int main() {
 
     pthread_t threads[THREAD_POOL_SIZE];
-    int thread_ids[THREAD_POOL_SIZE];
 
-    pthread_mutex_init(&lock, NULL);
-    pthread_cond_init(&cond, NULL);
+    pthread_mutex_init(&queue_mutex, NULL);
+    pthread_cond_init(&queue_cond, NULL);
 
-    for (int i = 0; i < THREAD_POOL_SIZE; i++) {
-        thread_ids[i] = i + 1;
-        pthread_create(&threads[i], NULL, worker, &thread_ids[i]);
+    for (long i = 0; i < THREAD_POOL_SIZE; i++) {
+        pthread_create(&threads[i], NULL, worker, (void*)i);
     }
 
-    
-    for (int i = 0; i < 5; i++) {
-
-        pthread_mutex_lock(&lock);
-
-        task_queue[task_count].task_id = i + 1;
-        task_queue[task_count].data = (i + 1) * 10;
-        task_count++;
-
-        pthread_mutex_unlock(&lock);
-
-        pthread_cond_signal(&cond);
+    for (int i = 0; i < 6; i++) {
+        add_task(i, (rand() % 3) + 1);
     }
 
     sleep(5);
 
-    printf("Main thread finished\n");
+    pthread_mutex_lock(&queue_mutex);
+    shutdown_flag = 1;
+    pthread_cond_broadcast(&queue_cond);
+    pthread_mutex_unlock(&queue_mutex);
+
+    for (int i = 0; i < THREAD_POOL_SIZE; i++) {
+        pthread_join(threads[i], NULL);
+    }
+
+    printf("Thread pool shutdown complete\n");
 
     return 0;
 }

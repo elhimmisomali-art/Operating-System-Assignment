@@ -1,0 +1,21 @@
+{
+    "timestamp": "2026-05-19 16:23:46.718850",
+    "status": "SUCCESS",
+    "process_count": 7,
+    "algorithms": {},
+    "generated_files": {
+        "pcb_snapshot": "../c_core/pcb_snapshot.json",
+        "scheduler_results": "../python_scheduler/simulation_results.json",
+        "gantt_charts": [
+            "../docs/screenshots/FCFS_Gantt.png",
+            "../docs/screenshots/SJF_Gantt.png",
+            "../docs/screenshots/PRIORITY_Gantt.png",
+            "../docs/screenshots/RR_Gantt.png"
+        ],
+        "comparison_charts": [
+            "../docs/screenshots/AWT_Comparison.png",
+            "../docs/screenshots/TAT_Comparison.png",
+            "../docs/screenshots/CPU_Comparison.png"
+        ]
+    }
+}

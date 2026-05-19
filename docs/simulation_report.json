@@ -1,0 +1,16 @@
+{
+    "timestamp": "2026-05-19 10:39:59.842030",
+    "status": "SUCCESS",
+    "process_count": 7,
+    "algorithms": {
+        "FCFS": "executed",
+        "SJF": "executed",
+        "PRIORITY": "executed",
+        "ROUND_ROBIN": "executed"
+    },
+    "metrics_note": "Metrics are computed inside scheduler_sim.py",
+    "output_files": {
+        "gantt_charts": "../docs/screenshots/",
+        "pcb_snapshot": "../c_core/pcb_snapshot.json"
+    }
+}
