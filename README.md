@@ -194,8 +194,6 @@ The project highlights the trade-offs between different scheduling strategies an
 
 # Git Commit (FINAL)
 
-Use this for your final push:
-
 git add .
 git commit -m "Final polished EduOS with full OS simulation and scheduling algorithms"
 git push
