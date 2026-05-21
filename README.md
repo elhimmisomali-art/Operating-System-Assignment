@@ -173,12 +173,12 @@ This enables side-by-side analysis of all scheduling algorithms in a single view
 
 # Key Features
 
-✔ Process lifecycle simulation
-✔ Multiple CPU scheduling algorithms
-✔ Thread pool implementation
-✔ Race condition demonstration + fix
-✔ IPC via shared memory simulation
-✔ C → Python integration
+- Process lifecycle simulation
+- Multiple CPU scheduling algorithms
+- Thread pool implementation
+- Race condition demonstration + fix
+- IPC via shared memory simulation
+-C → Python integration
 
 # pcb_snapshot
 
