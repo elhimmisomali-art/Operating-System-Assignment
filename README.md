@@ -113,149 +113,116 @@ EduOS-25311351024/
 │   └── screenshots/            # Screenshots and charts
 │
 └── README.md
+```
 
-# Threading system
+---
 
-EduOS includes a thread pool system implemented using pthreads.
+# Operating System Concepts Demonstrated
 
-Features:
-Thread pool with task queue
-Mutex locks for synchronization
-Condition variables for thread coordination
+## System Calls
+- edu_fork() → Linux fork(2)
+- edu_exec() → Linux execve(2)
+- edu_wait() → Linux wait(2)
+- edu_exit() → Linux _exit(2)
 
-This demonstrates concurrent execution and resource sharing
+## IPC and Protection
+Shared memory communication is implemented in ipc_shared.c.
+Only processes with matching owner_id fields are allowed access.
 
-The system demonstrates:
+## OS Structure
+- Kernel Simulation:
+  - process_manager.c
+  - ipc_shared.c
+- User Space:
+  - controller.py
+  - scheduler_sim.py
 
-1. Race Condition (Uncontrolled Access)
+## Virtual Machine Concept
+Each PCB acts like an isolated virtual process environment, similar to guest isolation in Type-2 hypervisors.
 
-Multiple threads updating a shared variable without synchronization.
+---
 
-2. Fixed Version
+# Sample Output
 
-Race condition is resolved using:
+```text
+[EDUOS-KERNEL] PID=1 MSG=STATE=CREATED
+[EDUOS-KERNEL] PID=2 MSG=SYS=EXEC
+[IPC-SHM] WRITE | PID=1
+[IPC-SHM] ACCESS DENIED | PID=2
+```
 
-Mutex locks
-Controlled critical section access
+Final Summary Line:
 
-This shows the importance of synchronization in concurrent systems.
+```text
+0 errors from 0 contexts
+```
 
-# Interprocess Communication (IPC)
+---
 
-EduOS implements IPC using:
+# Screenshots
 
-Shared memory simulation
-Pipe-based communication between processes
+## Screenshot 1 — Process Manager Running
+[Process Manager Running](docs/screenshots/process_manager.png)
 
-This allows data exchange between the C core and Python scheduler.
+## Screenshot 2 — IPC Shared Memory Demonstration
+[IPC Shared Memory Security](docs/screenshots/ipc_security.png)
 
-# CPU Scheduling Algorithms
+## Screenshot 3 — Scheduler Output and Gantt Charts
+[FCFS_GANTT chart](docs/screenshots/FCFS_Gantt.png)
+[SJF_GANTT chart](docs/screenshot/SJF_Gantt.png)
+[RR_GANTT chart](docs/screenshot/RR_Gantt.png)
+[PRIORITY_GANTT chart](docs/screenshots/Priority_Gantt.png)
+---
 
-EduOS supports multiple scheduling strategies:
+# Challenges Encountered
 
-# FCFS (First Come First Serve)
-Non-preemptive scheduling
-Executes processes in order of arrival
+## 1. Multiple Definition of main()
+Problem:
+Several C files contained separate main() functions causing linker errors.
 
- Simple and fair
-Can cause long waiting times
+Solution:
+Each file was compiled separately through the Makefile.
 
-# SJF (Shortest Job First)
-Executes processes with shortest burst time first
-Improves average waiting time
+---
 
- Efficient for short tasks
- May cause starvation
+## 2. IPC Linking Errors
+Problem:
+ipc_shared.c could not access process_table and process_count.
 
- Priority Scheduling
-Processes selected based on priority (0–9)
-Lower value = higher priority
+Solution:
+Global shared variables were declared using extern in eduos.h.
 
- Flexible prioritization
- May cause starvation without aging
+---
 
-# Round Robin (Preemptive)
-Each process gets a fixed time quantum
-If not finished, it is moved to the back of the queue
+## 3. Header File Visibility Problems
+Problem:
+Compiler produced implicit declaration errors.
 
- Fair CPU sharing
- Prevents starvation
- Depends on quantum size
+Solution:
+Correct include paths and header declarations were added.
 
-# Scheduling Output Summary
+---
 
-The system generates different execution orders for each algorithm, clearly showing how CPU scheduling affects process execution.
+# References
 
-Example outputs demonstrate:
+1. Operating System Concepts — Abraham Silberschatz
+2. Linux man pages:
+   - fork(2)
+   - execve(2)
+   - wait(2)
+3. GNU GCC Documentation
+4. POSIX Threads Documentation
+5. Course lecture notes
 
-Different start/end times
-Different execution order
-Fairness vs efficiency trade-offs
-# System Integration
+---
 
-# EduOS integrates:
+# .gitignore
 
-C-based process manager (core system)
-Python scheduler (algorithm simulation)
-JSON-based IPC communication
-
-This forms a complete end-to-end OS simulation pipeline.
-
-Scheduling Visualisation & Comparison
-
-The system generates visual and statistical comparisons for all implemented CPU scheduling algorithms.
-
-# Visual Outputs
-FCFS, SJF, Priority, and Round Robin Gantt charts are generated using matplotlib.
-Each process is assigned a unique color for clarity.
-Idle CPU time is displayed in grey blocks.
-All charts are saved in:
-docs/screenshots/
-Comparison Charts
-
-The simulator automatically generates comparison graphs for:
-
-Average Waiting Time (AWT)
-Average Turnaround Time (TAT)
-CPU Utilisation
-
-These charts allow direct evaluation of algorithm efficiency.
-
-Performance Table
-
-A formatted comparison table is printed in the terminal showing:
-
-Average Waiting Time
-Average Turnaround Time
-Average Response Time
-CPU Utilisation
-Throughput
-
-This enables side-by-side analysis of all scheduling algorithms in a single view.
-
-# Key Features
-
-✔ Process lifecycle simulation
-✔ Multiple CPU scheduling algorithms
-✔ Thread pool implementation
-✔ Race condition demonstration + fix
-✔ IPC via shared memory simulation
-✔ C → Python integration
-
-# pcb_snapshot
-
-pcb_snapshot.json is generated dynamically by the C process manager to simulate kernel-level process state updates.
-
-simulation_report.json is generated by the Python controller after completing scheduling analysis and system integration.
-
-# Conclusion
-
-EduOS successfully demonstrates fundamental operating system concepts including process management, scheduling algorithms, threading, and inter-process communication.
-
-The project highlights the trade-offs between different scheduling strategies and shows how operating systems manage resources efficiently.
-
-# Git Commit (FINAL)
-
-git add .
-git commit -m "Final polished EduOS with full OS simulation and scheduling algorithms"
-git push
+```gitignore
+*.o
+*.out
+*.exe
+__pycache__/
+*.pyc
+venv/
+.DS_Store
