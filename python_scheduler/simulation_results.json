@@ -1,0 +1,481 @@
+{
+    "FCFS": {
+        "schedule": [
+            [
+                6,
+                0,
+                2
+            ],
+            [
+                1,
+                2,
+                12
+            ],
+            [
+                7,
+                12,
+                22
+            ],
+            [
+                2,
+                22,
+                32
+            ],
+            [
+                3,
+                32,
+                34
+            ],
+            [
+                4,
+                34,
+                39
+            ],
+            [
+                5,
+                39,
+                43
+            ]
+        ],
+        "metrics": {
+            "1": {
+                "arrival_time": 1,
+                "burst_time": 10,
+                "completion_time": 12,
+                "turnaround_time": 11,
+                "waiting_time": 1,
+                "response_time": 1
+            },
+            "2": {
+                "arrival_time": 3,
+                "burst_time": 10,
+                "completion_time": 32,
+                "turnaround_time": 29,
+                "waiting_time": 19,
+                "response_time": 19
+            },
+            "3": {
+                "arrival_time": 3,
+                "burst_time": 2,
+                "completion_time": 34,
+                "turnaround_time": 31,
+                "waiting_time": 29,
+                "response_time": 29
+            },
+            "4": {
+                "arrival_time": 4,
+                "burst_time": 5,
+                "completion_time": 39,
+                "turnaround_time": 35,
+                "waiting_time": 30,
+                "response_time": 30
+            },
+            "5": {
+                "arrival_time": 4,
+                "burst_time": 4,
+                "completion_time": 43,
+                "turnaround_time": 39,
+                "waiting_time": 35,
+                "response_time": 35
+            },
+            "6": {
+                "arrival_time": 0,
+                "burst_time": 2,
+                "completion_time": 2,
+                "turnaround_time": 2,
+                "waiting_time": 0,
+                "response_time": 0
+            },
+            "7": {
+                "arrival_time": 1,
+                "burst_time": 10,
+                "completion_time": 22,
+                "turnaround_time": 21,
+                "waiting_time": 11,
+                "response_time": 11
+            }
+        },
+        "avg_waiting_time": 17.857142857142858,
+        "avg_turnaround_time": 24.0,
+        "cpu_utilisation": 100.0,
+        "throughput": 0.16279069767441862
+    },
+    "SJF": {
+        "schedule": [
+            [
+                6,
+                0,
+                2
+            ],
+            [
+                1,
+                2,
+                12
+            ],
+            [
+                3,
+                12,
+                14
+            ],
+            [
+                5,
+                14,
+                18
+            ],
+            [
+                4,
+                18,
+                23
+            ],
+            [
+                7,
+                23,
+                33
+            ],
+            [
+                2,
+                33,
+                43
+            ]
+        ],
+        "metrics": {
+            "1": {
+                "arrival_time": 1,
+                "burst_time": 10,
+                "completion_time": 12,
+                "turnaround_time": 11,
+                "waiting_time": 1,
+                "response_time": 1
+            },
+            "2": {
+                "arrival_time": 3,
+                "burst_time": 10,
+                "completion_time": 43,
+                "turnaround_time": 40,
+                "waiting_time": 30,
+                "response_time": 30
+            },
+            "3": {
+                "arrival_time": 3,
+                "burst_time": 2,
+                "completion_time": 14,
+                "turnaround_time": 11,
+                "waiting_time": 9,
+                "response_time": 9
+            },
+            "4": {
+                "arrival_time": 4,
+                "burst_time": 5,
+                "completion_time": 23,
+                "turnaround_time": 19,
+                "waiting_time": 14,
+                "response_time": 14
+            },
+            "5": {
+                "arrival_time": 4,
+                "burst_time": 4,
+                "completion_time": 18,
+                "turnaround_time": 14,
+                "waiting_time": 10,
+                "response_time": 10
+            },
+            "6": {
+                "arrival_time": 0,
+                "burst_time": 2,
+                "completion_time": 2,
+                "turnaround_time": 2,
+                "waiting_time": 0,
+                "response_time": 0
+            },
+            "7": {
+                "arrival_time": 1,
+                "burst_time": 10,
+                "completion_time": 33,
+                "turnaround_time": 32,
+                "waiting_time": 22,
+                "response_time": 22
+            }
+        },
+        "avg_waiting_time": 12.285714285714286,
+        "avg_turnaround_time": 18.428571428571427,
+        "cpu_utilisation": 100.0,
+        "throughput": 0.16279069767441862
+    },
+    "PRIORITY": {
+        "schedule": [
+            [
+                6,
+                0,
+                2
+            ],
+            [
+                1,
+                2,
+                12
+            ],
+            [
+                4,
+                12,
+                17
+            ],
+            [
+                7,
+                17,
+                27
+            ],
+            [
+                2,
+                27,
+                37
+            ],
+            [
+                3,
+                37,
+                39
+            ],
+            [
+                5,
+                39,
+                43
+            ]
+        ],
+        "metrics": {
+            "1": {
+                "arrival_time": 1,
+                "burst_time": 10,
+                "completion_time": 12,
+                "turnaround_time": 11,
+                "waiting_time": 1,
+                "response_time": 1
+            },
+            "2": {
+                "arrival_time": 3,
+                "burst_time": 10,
+                "completion_time": 37,
+                "turnaround_time": 34,
+                "waiting_time": 24,
+                "response_time": 24
+            },
+            "3": {
+                "arrival_time": 3,
+                "burst_time": 2,
+                "completion_time": 39,
+                "turnaround_time": 36,
+                "waiting_time": 34,
+                "response_time": 34
+            },
+            "4": {
+                "arrival_time": 4,
+                "burst_time": 5,
+                "completion_time": 17,
+                "turnaround_time": 13,
+                "waiting_time": 8,
+                "response_time": 8
+            },
+            "5": {
+                "arrival_time": 4,
+                "burst_time": 4,
+                "completion_time": 43,
+                "turnaround_time": 39,
+                "waiting_time": 35,
+                "response_time": 35
+            },
+            "6": {
+                "arrival_time": 0,
+                "burst_time": 2,
+                "completion_time": 2,
+                "turnaround_time": 2,
+                "waiting_time": 0,
+                "response_time": 0
+            },
+            "7": {
+                "arrival_time": 1,
+                "burst_time": 10,
+                "completion_time": 27,
+                "turnaround_time": 26,
+                "waiting_time": 16,
+                "response_time": 16
+            }
+        },
+        "avg_waiting_time": 16.857142857142858,
+        "avg_turnaround_time": 23.0,
+        "cpu_utilisation": 100.0,
+        "throughput": 0.16279069767441862
+    },
+    "ROUND_ROBIN": {
+        "schedule": [
+            [
+                6,
+                0,
+                2
+            ],
+            [
+                1,
+                2,
+                4
+            ],
+            [
+                7,
+                4,
+                6
+            ],
+            [
+                2,
+                6,
+                8
+            ],
+            [
+                3,
+                8,
+                10
+            ],
+            [
+                4,
+                10,
+                12
+            ],
+            [
+                5,
+                12,
+                14
+            ],
+            [
+                1,
+                14,
+                16
+            ],
+            [
+                7,
+                16,
+                18
+            ],
+            [
+                2,
+                18,
+                20
+            ],
+            [
+                4,
+                20,
+                22
+            ],
+            [
+                5,
+                22,
+                24
+            ],
+            [
+                1,
+                24,
+                26
+            ],
+            [
+                7,
+                26,
+                28
+            ],
+            [
+                2,
+                28,
+                30
+            ],
+            [
+                4,
+                30,
+                31
+            ],
+            [
+                1,
+                31,
+                33
+            ],
+            [
+                7,
+                33,
+                35
+            ],
+            [
+                2,
+                35,
+                37
+            ],
+            [
+                1,
+                37,
+                39
+            ],
+            [
+                7,
+                39,
+                41
+            ],
+            [
+                2,
+                41,
+                43
+            ]
+        ],
+        "metrics": {
+            "1": {
+                "arrival_time": 1,
+                "burst_time": 10,
+                "completion_time": 39,
+                "turnaround_time": 38,
+                "waiting_time": 28,
+                "response_time": 1
+            },
+            "2": {
+                "arrival_time": 3,
+                "burst_time": 10,
+                "completion_time": 43,
+                "turnaround_time": 40,
+                "waiting_time": 30,
+                "response_time": 3
+            },
+            "3": {
+                "arrival_time": 3,
+                "burst_time": 2,
+                "completion_time": 10,
+                "turnaround_time": 7,
+                "waiting_time": 5,
+                "response_time": 5
+            },
+            "4": {
+                "arrival_time": 4,
+                "burst_time": 5,
+                "completion_time": 31,
+                "turnaround_time": 27,
+                "waiting_time": 22,
+                "response_time": 6
+            },
+            "5": {
+                "arrival_time": 4,
+                "burst_time": 4,
+                "completion_time": 24,
+                "turnaround_time": 20,
+                "waiting_time": 16,
+                "response_time": 8
+            },
+            "6": {
+                "arrival_time": 0,
+                "burst_time": 2,
+                "completion_time": 2,
+                "turnaround_time": 2,
+                "waiting_time": 0,
+                "response_time": 0
+            },
+            "7": {
+                "arrival_time": 1,
+                "burst_time": 10,
+                "completion_time": 41,
+                "turnaround_time": 40,
+                "waiting_time": 30,
+                "response_time": 3
+            }
+        },
+        "avg_waiting_time": 18.714285714285715,
+        "avg_turnaround_time": 24.857142857142858,
+        "cpu_utilisation": 100.0,
+        "throughput": 0.16279069767441862
+    }
+}

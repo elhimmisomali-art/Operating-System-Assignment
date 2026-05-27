@@ -5,17 +5,24 @@
 #include <sys/types.h>
 
 #include "include/eduos.h"
+#include "include/ipc_shared.h"
 
 #define MAX_PROCESSES 128
 
-static PCB process_table[MAX_PROCESSES];
-static int process_count = 0;
+PCB process_table[MAX_PROCESSES];
+int process_count = 0;
 static pid_t pid_counter = 1;
 
 static void log_event(const char *msg, pid_t pid) {
+
     time_t now = time(NULL);
-    printf("[TIME %lld] PID %lld: %s\n",
-           (long long)now,
+    struct tm *t = localtime(&now);
+
+    char time_str[32];
+    strftime(time_str, sizeof(time_str), "%Y-%m-%d %H:%M:%S", t);
+
+    printf("[EDUOS-KERNEL] [TIME: %s] PID=%lld MSG=%s\n",
+           time_str,
            (long long)pid,
            msg);
 }
@@ -38,6 +45,7 @@ pid_t edu_fork(PCB *parent) {
     child.state = READY;
     child.creation_time = time(NULL);
     child.remaining_time = child.burst_time;
+    child.owner_id = child.pid;
 
     process_table[process_count++] = child;
 
@@ -46,11 +54,10 @@ pid_t edu_fork(PCB *parent) {
     return child.pid;
 }
 
-
+/* ---------------- EXEC ---------------- */
 void edu_exec(pid_t pid, char *prog_name) {
 
     PCB *proc = find_process(pid);
-
     if (!proc) return;
 
     strncpy(proc->name, prog_name, sizeof(proc->name) - 1);
@@ -61,26 +68,23 @@ void edu_exec(pid_t pid, char *prog_name) {
     log_event("Exec loaded program", pid);
 }
 
-
+/* ---------------- WAIT ---------------- */
 void edu_wait(pid_t pid) {
 
     PCB *proc = find_process(pid);
-
     if (!proc) return;
 
     log_event("Process waiting (simulated)", pid);
 
     proc->state = WAITING;
 
-   
     for (volatile int i = 0; i < 100000000; i++);
 }
 
-
+/* ---------------- EXIT ---------------- */
 void edu_exit(pid_t pid, int exit_code) {
 
     PCB *proc = find_process(pid);
-
     if (!proc) return;
 
     proc->state = TERMINATED;
@@ -88,10 +92,12 @@ void edu_exit(pid_t pid, int exit_code) {
 
     log_event("Process terminated", pid);
 
-    printf("PID %d exited with code %d\n", pid, exit_code);
+    printf("[EDUOS-KERNEL] PROCESS EXIT => PID=%lld CODE=%d\n",
+       (long long)pid,
+        exit_code);
 }
 
-
+/* ---------------- MAIN ---------------- */
 int main() {
 
     printf("EduOS Process Manager Loaded Successfully\n");
@@ -101,7 +107,7 @@ int main() {
     process_count = 0;
     pid_counter = 1;
 
-    
+    /* ---------------- CREATE PROCESSES ---------------- */
     for (int i = 0; i < 6; i++) {
 
         PCB p;
@@ -110,38 +116,39 @@ int main() {
         strcpy(p.name, "process");
 
         p.state = READY;
-
-        
         p.priority = rand() % 10;
-
-      
         p.burst_time = (rand() % 10) + 1;
-
         p.remaining_time = p.burst_time;
-
-        
         p.arrival_time = rand() % 5;
-
         p.memory_req_kb = (rand() % 1024) + 100;
-
         p.creation_time = time(NULL);
         p.thread_count = 0;
         p.exit_code = 0;
+        p.owner_id = p.pid;   // 🔐 security ownership
 
         process_table[process_count++] = p;
 
         log_event("Process created", p.pid);
     }
 
-   
-
+    /* ---------------- PROCESS LIFECYCLE ---------------- */
     pid_t child = edu_fork(&process_table[0]);
+    (void)child; // silence warning
 
     edu_exec(process_table[1].pid, "edu_program");
-
     edu_wait(process_table[1].pid);
-
     edu_exit(process_table[1].pid, 0);
+
+    /* ---------------- IPC INTEGRATION ---------------- */
+
+
+    init_shared_memory(process_table[0].pid);
+
+    
+    write_shared_memory(process_table[0].pid, "SYSTEM DATA FROM PROCESS 0");
+    read_shared_memory(process_table[0].pid);
+
+    write_shared_memory(process_table[1].pid, "HACK ATTEMPT FROM PROCESS 1");
 
     
     FILE *f = fopen("pcb_snapshot.json", "w");
@@ -155,8 +162,8 @@ int main() {
             PCB p = process_table[i];
 
             fprintf(f,
-                " {\"pid\": %d, \"burst_time\": %d, \"arrival_time\": %d, \"priority\": %d}%s\n",
-                p.pid,
+                " {\"pid\": %lld, \"burst_time\": %d, \"arrival_time\": %d, \"priority\": %d}%s\n",
+                (long long)p.pid,
                 p.burst_time,
                 p.arrival_time,
                 p.priority,
@@ -165,7 +172,6 @@ int main() {
         }
 
         fprintf(f, "]\n");
-
         fclose(f);
     }
 

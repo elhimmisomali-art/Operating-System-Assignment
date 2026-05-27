@@ -1,54 +1,116 @@
-OS Assignment
-Module_Code: 351 CS 2104
+# EduOS - Operating System Simulator
 
-Student: ELHIM MISOMALI
-Student ID: 25311351024
+## Module Information
+- Module Code: 351 CS 2104
+- Student Name: ELHIM MISOMALI
+- Registration Number: 25311351024
 
-# Project Overview
+## Project Overview
+EduOS is a simplified Operating System simulator developed using C and Python. 
+The project demonstrates core Operating System concepts including process management, 
+threading, CPU scheduling, IPC (shared memory), synchronization, deadlock simulation, 
+and protection/security mechanisms.
 
-EduOS is a simplified operating system simulator built using C and Python.
-It demonstrates core operating system concepts such as:
+The simulator mimics real Linux system calls such as fork(), exec(), wait(), and exit() 
+through custom implementations like edu_fork(), edu_exec(), edu_wait(), and edu_exit().
 
-# Process management
-CPU scheduling algorithms
-Threading and synchronization
-Inter-process communication (IPC)
+---
 
-The project is designed to show how an operating system manages processes internally.
+# Prerequisites
 
-EduOS implements a simplified process lifecycle using a PCB (Process Control Block).
+Before running the project, install:
 
-Implemented System Calls:
-edu_fork() → creates a new process from a parent
-edu_exec() → loads a new program into a process
-edu_wait() → simulates process synchronization
-edu_exit() → terminates a process
-PCB Contains:
-Process ID (PID)
-State (READY, RUNNING, WAITING, TERMINATED)
-Burst Time
-Priority
-Arrival Time
-Memory Requirements
+## C Environment
+- MSYS2 UCRT64
+- GCC Compiler
+- Make utility
 
-# program structure
+## Python Environment
+- Python 3.10+
+- matplotlib
+- numpy
 
-EduOS/
+Install Python libraries using:
+
+```bash
+pip install matplotlib numpy
+```
+
+---
+
+# Build and Run Instructions
+
+## Step 1 — Open MSYS2 UCRT64
+
+Navigate to the C core directory:
+
+```bash
+cd /c/users/YOUR_USERNAME/Downloads/EduOS-25311351024/c_core
+```
+
+## Step 2 — Clean Previous Builds
+
+```bash
+make clean
+```
+
+## Step 3 — Compile the Simulator
+
+```bash
+make all
+```
+
+## Step 4 — Run the Simulator
+
+```bash
+./process_manager.exe
+```
+
+---
+
+# Running the Python Scheduler
+
+Navigate to:
+
+```bash
+cd ../python_scheduler
+```
+
+Run:
+
+```bash
+python scheduler_sim.py --file ../c_core/pcb_snapshot.json
+```
+
+---
+
+# Annotated Directory Tree
+
+```
+EduOS-25311351024/
 │
-├── c_core/              # C-based OS simulation (core engine)
-│   ├── process_manager.c
-│   ├── thread_manager.c
-│   ├── race_demo.c
-│   ├── race_fixed.c
-│   ├── ipc_shared.c
-│   └── include/eduos.h
+├── c_core/
+│   ├── process_manager.c       # Main OS process simulation
+│   ├── ipc_shared.c            # Shared memory IPC + protection
+│   ├── thread_manager.c        # Thread pool simulation
+│   ├── producer_consumer.c     # Producer-consumer synchronization
+│   ├── race_demo.c             # Race condition demonstration
+│   ├── deadlock_demo.c         # Deadlock simulation
+│   ├── include/
+│   │   ├── eduos.h             # PCB structures and system API
+│   │   └── ipc_shared.h        # IPC function declarations
+│   └── Makefile                # Build automation
 │
-├── python_scheduler/    # CPU scheduling simulation
-│   └── scheduler_sim.py
+├── python_scheduler/
+│   ├── scheduler_sim.py        # CPU scheduling simulator
+│   └── simulation_results.json # Scheduling metrics
 │
-├── controller/          # Integration layer (C ↔ Python)
+├── controller/
+│   ├── controller.py           # Main orchestrator
+│   └── simulation_report.json  # Final generated report
 │
-├── docs/                # Reports and screenshots
+├── docs/
+│   └── screenshots/            # Screenshots and charts
 │
 └── README.md
 
@@ -173,12 +235,12 @@ This enables side-by-side analysis of all scheduling algorithms in a single view
 
 # Key Features
 
-- Process lifecycle simulation
-- Multiple CPU scheduling algorithms
-- Thread pool implementation
-- Race condition demonstration + fix
-- IPC via shared memory simulation
--C → Python integration
+✔ Process lifecycle simulation
+✔ Multiple CPU scheduling algorithms
+✔ Thread pool implementation
+✔ Race condition demonstration + fix
+✔ IPC via shared memory simulation
+✔ C → Python integration
 
 # pcb_snapshot
 

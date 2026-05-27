@@ -13,6 +13,8 @@ pthread_mutex_t mutex;
 
 void* producer(void* arg) {
 
+    (void)arg;  // FIX: removes unused parameter warning
+
     for (int i = 0; i < 10; i++) {
 
         sem_wait(&empty);
@@ -32,6 +34,8 @@ void* producer(void* arg) {
 }
 
 void* consumer(void* arg) {
+
+    (void)arg;  // FIX: removes unused parameter warning
 
     for (int i = 0; i < 10; i++) {
 
@@ -64,6 +68,10 @@ int main() {
 
     pthread_join(p, NULL);
     pthread_join(c, NULL);
+
+    sem_destroy(&empty);
+    sem_destroy(&full);
+    pthread_mutex_destroy(&mutex);
 
     printf("Producer-Consumer finished\n");
 

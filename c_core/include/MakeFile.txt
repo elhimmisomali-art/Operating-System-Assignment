@@ -1,6 +1,0 @@
-all:
-	gcc -Wall -Wextra -pthread -o eduos process_manager.c thread_manager.c ipc_module.c main_sim.c
-
-clean:
-	
-	del eduos.exe

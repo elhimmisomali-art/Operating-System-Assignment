@@ -1,19 +1,9 @@
-
 CC = gcc
-CFLAGS = -Wall -Wextra -std=c11 -pthread -Iinclude
-
-TARGET = eduos
-
-SRCS = \
-process_manager.c \
-thread_manager.c \
-race_demo.c \
-producer_consumer.c \
-deadlock_demo.c \
-ipc_shared.c
+CFLAGS = -Wall -Wextra -std=c11 -pthread
 
 all:
-	$(CC) $(CFLAGS) -o $(TARGET) $(SRCS)
+	$(CC) $(CFLAGS) -o process_manager \
+	process_manager.c ipc_shared.c
 
 clean:
-	rm -f $(TARGET) *.exe
+	rm -f process_manager

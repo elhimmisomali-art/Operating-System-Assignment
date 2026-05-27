@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <unistd.h>
+#include <stdint.h>
 
 #define THREAD_POOL_SIZE 4
 #define TASK_QUEUE_SIZE 10
@@ -22,7 +23,7 @@ int shutdown_flag = 0;
 
 void* worker(void* arg) {
 
-    long id = (long)arg;
+    long id = (long)(intptr_t)arg;
 
     while (1) {
 
@@ -59,6 +60,7 @@ void add_task(int id, int workload) {
     task_count++;
 
     pthread_cond_signal(&queue_cond);
+
     pthread_mutex_unlock(&queue_mutex);
 }
 
@@ -70,7 +72,7 @@ int main() {
     pthread_cond_init(&queue_cond, NULL);
 
     for (long i = 0; i < THREAD_POOL_SIZE; i++) {
-        pthread_create(&threads[i], NULL, worker, (void*)i);
+        pthread_create(&threads[i], NULL, worker, (void*)(intptr_t)i);
     }
 
     for (int i = 0; i < 6; i++) {
@@ -89,6 +91,9 @@ int main() {
     }
 
     printf("Thread pool shutdown complete\n");
+
+    pthread_mutex_destroy(&queue_mutex);
+    pthread_cond_destroy(&queue_cond);
 
     return 0;
 }

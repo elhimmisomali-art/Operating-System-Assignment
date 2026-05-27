@@ -1,11 +1,14 @@
 #include <stdio.h>
 #include <pthread.h>
 #include <unistd.h>
+#include <stdint.h>
 
 pthread_mutex_t A = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t B = PTHREAD_MUTEX_INITIALIZER;
 
 void* thread1(void* arg) {
+
+    (void)arg;  // FIX: remove unused warning
 
     pthread_mutex_lock(&A);
     printf("Thread 1 got A\n");
@@ -22,6 +25,8 @@ void* thread1(void* arg) {
 }
 
 void* thread2(void* arg) {
+
+    (void)arg;  // FIX: remove unused warning
 
     pthread_mutex_lock(&B);
     printf("Thread 2 got B\n");

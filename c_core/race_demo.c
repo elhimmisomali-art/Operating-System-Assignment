@@ -8,8 +8,10 @@ int counter = 0;
 
 void* increment(void* arg) {
 
+    (void)arg;   // FIX: removes unused parameter warning
+
     for (int i = 0; i < ITERATIONS; i++) {
-        counter++; // race condition
+        counter++; // race condition (intentional for demo)
     }
 
     return NULL;
